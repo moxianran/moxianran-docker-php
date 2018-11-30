@@ -1,19 +1,19 @@
 ／.idea
 
 # 数据库文件
-./data/redis
+/data/redis
 data/mongo/
 data/mysql
-!./data/redis/README.txt
-!./data/mongo/README.txt
-!./data/mysql/README.txt
+!/data/redis/README.txt
+!/data/mongo/README.txt
+!/data/mysql/README.txt
 
 # 日志文件
-./logs/mysql/*.log
-./logs/nginx/*.log
-./logs/php/php56/*.log
-./logs/php/php71*.log
-./logs/redis/*.log
+/logs/mysql/*.log
+/logs/nginx/*.log
+/logs/php/php56/*.log
+/logs/php/php71*.log
+/logs/redis/*.log
 
 # 项目文件
-./html/*
+/html/*
