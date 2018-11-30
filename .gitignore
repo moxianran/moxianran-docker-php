@@ -1,9 +1,9 @@
-./.idea/
+／.idea
 
 # 数据库文件
-./data/redis/
-./data/mongo/
-./data/mysql/
+./data/redis
+data/mongo/
+data/mysql
 !./data/redis/README.txt
 !./data/mongo/README.txt
 !./data/mysql/README.txt
