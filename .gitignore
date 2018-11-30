@@ -17,3 +17,7 @@ data/mysql
 
 # 项目文件
 /html/*
+
+# nginx配置文件
+/files/nginx/conf.d/
+!/files/nginx/conf.d/default.conf
