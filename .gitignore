@@ -1,0 +1,21 @@
+/data/.idea
+
+# 数据库文件
+/data/data/redis/
+/data/data/mongo/
+/data/data/mysql/
+!/data/data/redis/README.txt
+!/data/data/mongo/README.txt
+!/data/data/mysql/README.txt
+
+# 日志文件
+/data/logs/mysql/*.log
+/data/logs/nginx/*.log
+/data/logs/php/php56/*.log
+/data/logs/php/php71*.log
+/data/logs/redis/*.log
+
+
+
+# 项目文件
+/data/html/*
