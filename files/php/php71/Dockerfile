@@ -15,8 +15,7 @@ RUN apt-get install -y libpng-dev
 RUN docker-php-ext-install zip \
 && docker-php-ext-install pdo_mysql \
 && docker-php-ext-install opcache \
-&& docker-php-ext-install mysqli \
-&& rm -r /var/lib/apt/lists/*
+&& docker-php-ext-install mysqli \&& rm -r /var/lib/apt/lists/*
 
 # 复制扩展包
 COPY ./pkg/redis.tgz /home/redis.tgz
@@ -24,6 +23,8 @@ COPY ./pkg/mongodb.tgz /home/mongodb.tgz
 COPY ./pkg/swoole.tgz /home/swoole.tgz
 COPY ./pkg/librdkafka.tar.gz /home/librdkafka.tar.gz
 COPY ./pkg/rdkafka.tgz /home/rdkafka.tgz
+COPY ./pkg/xdebug.tgz /home/xdebug.tgz
+COPY ./pkg/zookeeper.tgz /home/zookeeper.tgz
 
 # 安装扩展
 RUN cd /home \
@@ -37,18 +38,16 @@ RUN pecl install /home/rdkafka.tgz && echo "extension=rdkafka.so" > /usr/local/e
 RUN pecl install /home/redis.tgz && echo "extension=redis.so" > /usr/local/etc/php/conf.d/redis.ini
 RUN pecl install /home/mongodb.tgz && echo "extension=mongodb.so" > /usr/local/etc/php/conf.d/mongodb.ini
 RUN pecl install /home/swoole.tgz && echo "extension=swoole.so" > /usr/local/etc/php/conf.d/swoole.ini
+#RUN pecl install /home/xdebug.tgz && echo "zend_extension=xdebug.so" > /usr/local/etc/php/conf.d/xdebug.ini
+#RUN pecl install /home/zookeeper.tgz && echo "extension=zookeeper.so" > /usr/local/etc/php/conf.d/zookeeper.ini
 
 # 安装Composer
 ENV COMPOSER_HOME /root/composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 ENV PATH $COMPOSER_HOME/vendor/bin:$PATH
 
-RUN rm -f /home/redis.tgz \
-&& rm -f /home/mongodb.tgz \
-&& rm -f /home/swoole.tgz
-
 # 工作目录
-WORKDIR /data/data
+WORKDIR /data
 
 # 权限
 RUN usermod -u 1000 www-data

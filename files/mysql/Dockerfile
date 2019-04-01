@@ -1,4 +1,4 @@
-FROM mysql:5.6
+FROM mysql:5.7
 LABEL maintainer="453104950@qq.com"
 
 # 设置时区
