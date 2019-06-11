@@ -5,4 +5,4 @@ LABEL maintainer="453104950@qq.com"
 ENV TZ=Asia/Shanghai
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-# Run mkdir -p /usr/local/var/db/redis/
+Run mkdir -p /usr/local/var/db/redis/
