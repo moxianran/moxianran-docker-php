@@ -40,31 +40,20 @@ services:
           MONGO_INITDB_ROOT_USERNAME: admin
           MONGO_INITDB_ROOT_PASSWORD: 123456
       restart: always
-
-  #es:
-  #    container_name: my_es
-  #    image: elasticsearch:6.5.4
-  #    container_name: es
-  #    environment:
-  #        - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-  #    ports:
-  #         - 9200:9200
-
-  php71:
-      container_name: my_php71
-      build: ./php/php71
+      
+  php72:
+      container_name: my_php72
+      build: ./php/php72
       ports:
           - "9000:9000"
       volumes:
           - ../html/:/data/html/:rw
-          - ./php/php71/php.ini:/usr/local/etc/php/php.ini:ro
-          - ./php/php71/php-fpm.conf:/usr/local/etc/php-fpm.conf:ro
+          - ./php/php72/php.ini:/usr/local/etc/php/php.ini:ro
+          - ./php/php72/php-fpm.conf:/usr/local/etc/php-fpm.conf:ro
           #- ../logs/php-fpm:/var/log/php-fpm:rw
       links:
           - mysql-db:mysql-db
           - redis-db:redis-db
-          #- es:es
-          #- zipkin:zipkin
       restart: always
       command: php-fpm
 
@@ -90,11 +79,9 @@ services:
       container_name: my_nginx
       build: ./nginx
       depends_on:
-          #- php56
-          - php71
+          - php72
       links:
-       # - php56:php56
-        - php71:php71
+        - php72:php72
       ports:
           - "80:80"
           - "9002:9002"
