@@ -1,5 +1,7 @@
 version: '3'
 services:
+
+
   mysql-db:
       container_name: my_mysql
       build: ./mysql
@@ -15,7 +17,11 @@ services:
           MYSQL_USER: test
           MYSQL_PASSWORD: 123456
       restart: always
+      networks:
+          ying_net:
+              ipv4_address: 11.11.11.1
       command: "--character-set-server=utf8"
+
 
   redis-db:
       container_name: my_redis
@@ -24,64 +30,40 @@ services:
           - "6379:6379"
       volumes:
           - ../data/redis:/data
-  #        - ./redis/redis.conf:/etc/redis/redis.conf:ro
+          - ./redis/redis.conf:/etc/redis/redis.conf:rw
       restart: always
-   #   command: redis-server /etc/redis/redis.conf
+      networks:
+          ying_net:
+              ipv4_address: 11.11.11.2
+      command: redis-server /etc/redis/redis.conf
 
-  mongo:
-      container_name: my_mongo
-      build: ./mongo
-      ports:
-          - 27017:27017
-      volumes:
-          - ../data/mongo/db:/data/db
-          - ../data/mongo/dbconfigs:/data/dbconfigs
-      environment:  # admin账号和密码
-          MONGO_INITDB_ROOT_USERNAME: admin
-          MONGO_INITDB_ROOT_PASSWORD: 123456
-      restart: always
       
-  php72:
-      container_name: my_php72
-      build: ./php/php72
+  php:
+      container_name: my_php
+      build: ./php
       ports:
           - "9000:9000"
       volumes:
           - ../html/:/data/html/:rw
-          - ./php/php72/php.ini:/usr/local/etc/php/php.ini:ro
-          - ./php/php72/php-fpm.conf:/usr/local/etc/php-fpm.conf:ro
+          - ./php/php.ini:/usr/local/etc/php/php.ini:ro
+          - ./php/php-fpm.conf:/usr/local/etc/php-fpm.conf:ro
           #- ../logs/php-fpm:/var/log/php-fpm:rw
       links:
           - mysql-db:mysql-db
           - redis-db:redis-db
       restart: always
+      networks:
+          ying_net:
+              ipv4_address: 11.11.11.3
       command: php-fpm
-
-  #php56:
-  #    container_name: my_php56
-  #    build: ./php/php56
-  #    ports:
-  #        - "9001:9000"
-  #    volumes:
-  #        - ../html/:/data/html/:rw
-  #        - ./php/php56/php.ini:/usr/local/etc/php/php.ini:ro
-  #        - ./php/php56/php-fpm.conf:/usr/local/etc/php-fpm.conf:ro
-  #        #- ../logs/php-fpm:/var/log/php-fpm:rw
-  #    links:
-  #        - mysql-db:mysql-db
-  #        - redis-db:redis-db
-          #- es:es
-          #- zipkin:zipkin
-  #    restart: always
-  #    command: php-fpm
 
   nginx:
       container_name: my_nginx
       build: ./nginx
       depends_on:
-          - php72
+          - php
       links:
-        - php72:php72
+        - php:php
       ports:
           - "80:80"
           - "9002:9002"
@@ -96,14 +78,40 @@ services:
           - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
           - ../logs/nginx:/var/log/nginx
       restart: always
+      networks:
+          ying_net:
+              ipv4_address: 11.11.11.4
       command: nginx -g 'daemon off;' # 关闭守护进程执行
 
-  #zipkin:
-  #    container_name: my_zipkin
-   #   image: openzipkin/zipkin:latest
-  #    ports:
-  #        - 9411:9411
-  #    restart: always
+
+
+      #  mongo:
+      #      container_name: my_mongo
+      #      build: ./mongo
+      #      ports:
+      #          - 27017:27017
+      #      volumes:
+      #          - ../data/mongo/db:/data/db
+      #          - ../data/mongo/dbconfigs:/data/dbconfigs
+      #      environment:  # admin账号和密码
+      #          MONGO_INITDB_ROOT_USERNAME: admin
+      #          MONGO_INITDB_ROOT_PASSWORD: 123456
+      #      restart: always
+
+      #  zipkin:
+      #      container_name: my_zipkin
+      #      image: openzipkin/zipkin:latest
+      #      ports:
+      #          - 9411:9411
+      #      restart: always
+
+networks:
+    ying_net:
+        driver: bridge
+        ipam:
+            config:
+                - subnet: 11.11.11.0/16
+
 
 
 
